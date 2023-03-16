@@ -11,18 +11,18 @@ router.get('/', async (req, res) => {
         return res.status(404).json({ message: "No Images Found" });
     }
     else {
-        const base64Data = getImages.map((element) => {
-            return (
-                {
-                    id: element._id,
-                    title : element.title,
-                    description : element.description,
-                    base64String : Buffer.from(element.pic.data.buffer, 'binary').toString('base64'),
-                    imageType: element.pic.contentType
-                }
-            )
-        })
-        res.send(base64Data)
+        // const base64Data = getImages.map((element) => {
+        //     return (
+        //         {
+        //             id: element._id,
+        //             title : element.title,
+        //             description : element.description,
+        //             base64String : Buffer.from(element.pic.data.buffer, 'binary').toString('base64'),
+        //             imageType: element.pic.contentType
+        //         }
+        //     )
+        // })
+        res.send(getImages)
 
 
 
