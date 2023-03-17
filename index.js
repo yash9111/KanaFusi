@@ -18,6 +18,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
+app.set('view engine', "ejs");
+app.set("views", path.resolve('./views'))
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./uploads/");
@@ -32,8 +35,6 @@ const upload = multer({ storage: storage })
 app.post('/upload', upload.single('image'), async (req, res) => {
 
   try {
-
-
     const newImage = new UploadSchema({
       title: req.body.title,
       description: req.body.description,
@@ -44,7 +45,7 @@ app.post('/upload', upload.single('image'), async (req, res) => {
     })
 
     await newImage.save();
-    res.status(200).json(newImage);
+    res.redirect('/success')
 
   } catch (e) {
     res.status(500).json({ 'message': "Internal Error" })
@@ -57,7 +58,7 @@ const getImages = require('./routes/getImage')
 app.use('/getimages', getImages)
 
 app.get('/', (req, res) => {
-  res.json({})
+  return res.render('form')
 })
 
 app.delete('/upload',async (req, res) => {
