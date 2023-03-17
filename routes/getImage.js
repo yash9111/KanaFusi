@@ -24,8 +24,6 @@ router.get('/', async (req, res) => {
         // })
         res.send(getImages)
 
-
-
         // console.log(getImages)
         // res.send(getImages)
         // return res.status(200).json({ getImages });

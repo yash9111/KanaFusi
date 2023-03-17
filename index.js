@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const UploadSchema = require('./models/Upload')
 const cors = require('cors')
+const imageCompression = require('browser-image-compression');
 
 const dbConnection = require('./database/dbConnection');
 dbConnection();
@@ -31,32 +32,45 @@ const upload = multer({ storage: storage })
 app.post('/upload', upload.single('image'), async (req, res) => {
 
   try {
-  const newImage = new UploadSchema({
+
+
+    const newImage = new UploadSchema({
       title: req.body.title,
       description: req.body.description,
       pic: {
-        data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+       data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
         contentType: req.file.mimetype
       }
     })
-     
+
     await newImage.save();
     res.status(200).json(newImage);
 
   } catch (e) {
-    res.status(500).json({'message':"Internal Error"})
+    res.status(500).json({ 'message': "Internal Error" })
     console.log(e.message)
   }
 })
 
 const getImages = require('./routes/getImage')
 
-app.use('/getImages',getImages)
+app.use('/getimages', getImages)
 
-app.get('/',(req,res)=>{
+app.get('/', (req, res) => {
   res.json({})
 })
 
+app.delete('/upload',async (req, res) => {
+  
+  try {
+    const deleteImages = await UploadSchema.deleteMany({'image':"image"});
+    console.log("deleted")
+
+  } catch (error) {
+    console.log(error.message)
+  }
+
+})
 
 // define API endpoint for handling POST requests
 
